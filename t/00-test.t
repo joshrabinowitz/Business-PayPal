@@ -8,7 +8,7 @@ my $n = 1;
 plan tests => 3;
 
 subtest pretest => sub {
-	plan tests => 9;
+	plan tests => 10;
 
 	my $pp1 = Business::PayPal->new();
 	my $pp2 = Business::PayPal->new(id => 'foobar');
@@ -23,6 +23,7 @@ subtest pretest => sub {
 	
 	my $button1 = $pp1->button();
 	ok($button1, 'button created');
+    like $button1, qr{<form method="post" action="https://www.paypal.com/cgi-bin/webscr" enctype="multipart/form-data">};
 	like($button1,
 	    qr/name\s*=\s*"{0,1}custom"{0,1}\s+value\s*=\s*"{0,1}$id1"{0,1}/i,
 	   "'custom' param eq id");
@@ -41,7 +42,7 @@ subtest pretest => sub {
 };
 
 subtest loop => sub {
-	plan tests => 3*$n;
+	plan tests => 4*$n;
 
 	for (1 .. $n) {
 		my $pp = Business::PayPal->new();
@@ -56,6 +57,7 @@ subtest loop => sub {
 		);
 		#diag $button;
 	
+        like $button, qr{<form method="post" action="https://www.paypal.com/cgi-bin/webscr" enctype="multipart/form-data">};
 		like $button, qr{action="https://www.paypal.com/cgi-bin/webscr"}, 'address';
 		like $button, qr{foo\@bar\.com}, 'email';
 		like $button, qr{<input type="hidden" name="amount" value="99.99" />}, 'amount';
@@ -64,7 +66,7 @@ subtest loop => sub {
 
 
 subtest 'sandbox' => sub {
-	plan tests => 7;
+	plan tests => 8;
 
 	my $pp = Business::PayPal->new( address  => 'https://www.sandbox.paypal.com/cgi-bin/webscr' );
 	my $button = $pp->button(
@@ -90,5 +92,7 @@ subtest 'sandbox' => sub {
 	like $button, qr{<input type="hidden" name="p3" value="1" />};
 	like $button, qr{<input type="hidden" name="src" value="1" />};
 	like $button, qr{<input type="hidden" name="t3" value="M" />};
+    like $button, qr{<form method="post" action="https://www.sandbox.paypal.com/cgi-bin/webscr" enctype="multipart/form-data">};
+
 };
 
