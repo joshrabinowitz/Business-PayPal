@@ -8,7 +8,7 @@ my $n = 1;
 plan tests => 3;
 
 subtest pretest => sub {
-	plan tests => 10;
+	plan tests => 11;
 
 	my $pp1 = Business::PayPal->new();
 	my $pp2 = Business::PayPal->new(id => 'foobar');
@@ -23,7 +23,9 @@ subtest pretest => sub {
 	
 	my $button1 = $pp1->button();
 	ok($button1, 'button created');
-    like $button1, qr{<form method="post" action="https://www.paypal.com/cgi-bin/webscr" enctype="multipart/form-data">};
+    like $button1, qr{<form method="post" action="https://www.paypal.com/cgi-bin/webscr" enctype="multipart/form-data"\s*>};
+    like $button1, qr{<input type="image" name="submit" src="http://images.paypal.com/images/x-click-but01.gif" alt="Make payments with PayPal" />};
+
 	like($button1,
 	    qr/name\s*=\s*"{0,1}custom"{0,1}\s+value\s*=\s*"{0,1}$id1"{0,1}/i,
 	   "'custom' param eq id");
@@ -42,7 +44,7 @@ subtest pretest => sub {
 };
 
 subtest loop => sub {
-	plan tests => 4*$n;
+	plan tests => 5*$n;
 
 	for (1 .. $n) {
 		my $pp = Business::PayPal->new();
@@ -57,16 +59,17 @@ subtest loop => sub {
 		);
 		#diag $button;
 	
-        like $button, qr{<form method="post" action="https://www.paypal.com/cgi-bin/webscr" enctype="multipart/form-data">};
+        like $button, qr{<form method="post" action="https://www.paypal.com/cgi-bin/webscr" enctype="multipart/form-data"\s*>};
 		like $button, qr{action="https://www.paypal.com/cgi-bin/webscr"}, 'address';
 		like $button, qr{foo\@bar\.com}, 'email';
 		like $button, qr{<input type="hidden" name="amount" value="99.99" />}, 'amount';
+        like $button, qr{<input type="image" name="submit" src="http://images.paypal.com/images/x-click-but01.gif" alt="Make payments with PayPal" />};
 	}
 };
 
 
 subtest 'sandbox' => sub {
-	plan tests => 8;
+	plan tests => 10;
 
 	my $pp = Business::PayPal->new( address  => 'https://www.sandbox.paypal.com/cgi-bin/webscr' );
 	my $button = $pp->button(
@@ -80,9 +83,11 @@ subtest 'sandbox' => sub {
 		t3             => 'M',
 
 		quantity       => 1,
+        form_id        => 'my_paypal_form',
 		return         => 'http://bar.com/water',
 		cancel_return  => 'http://bar.com/nowwater',
 		notify_url     => 'http://bar.com/hello_water',
+        button_image  => '<button type="button" class="btn btn-success">9 USD per month</button>',  # Bootstrap style button
 	);
 	#diag $button;
 	like $button, qr{action="https://www.sandbox.paypal.com/cgi-bin/webscr"}, 'address';
@@ -92,7 +97,8 @@ subtest 'sandbox' => sub {
 	like $button, qr{<input type="hidden" name="p3" value="1" />};
 	like $button, qr{<input type="hidden" name="src" value="1" />};
 	like $button, qr{<input type="hidden" name="t3" value="M" />};
-    like $button, qr{<form method="post" action="https://www.sandbox.paypal.com/cgi-bin/webscr" enctype="multipart/form-data">};
-
+    like $button, qr{<form method="post" action="https://www.sandbox.paypal.com/cgi-bin/webscr" enctype="multipart/form-data"\s*id="my_paypal_form">};
+    unlike $button, qr{x-click-but01};
+    like $button, qr{<button type="button" class="btn btn-success">9 USD per month</button>};
 };
 
