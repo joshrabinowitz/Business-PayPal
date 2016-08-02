@@ -263,12 +263,19 @@ sub new {
     my $self = {
         id => undef,
         address => 'https://www.paypal.com/cgi-bin/webscr',
+		check_cert => 1,
         @_,
     };
     bless $self, $class;
     $self->{id} = md5_hex(rand()) unless $self->{id};
 
     return $self;
+}
+
+sub check_cert {
+	my ($self, $value) = @_;
+	$self->{check_cert} = $value;
+	return;	
 }
 
 # returns current PayPal id
@@ -428,10 +435,12 @@ sub postpaypal {
 		@certs = $self->{certcontent};
 	}
 
-    return (wantarray ? (undef, "PayPal cert failed to match:\n$ppx509") : undef)
-        unless grep {$_ eq $ppx509} @certs;
-    return (wantarray ? (undef, "PayPal cert contents failed to match:\n$ppcertcontent") : undef)
-        unless grep { $_ eq $ppcertcontent } @cert_cont;
+	if ($self->{check_cert}) {
+		return (wantarray ? (undef, "PayPal cert failed to match:\n$ppx509") : undef)
+			unless grep {$_ eq $ppx509} @certs;
+		return (wantarray ? (undef, "PayPal cert contents failed to match:\n$ppcertcontent") : undef)
+		unless grep { $_ eq $ppcertcontent } @cert_cont;
+	}
     return (wantarray ? (undef, 'PayPal says transaction INVALID') : undef)
         if $page eq 'INVALID';
     return (wantarray ? (1, 'PayPal says transaction VERIFIED') : 1)

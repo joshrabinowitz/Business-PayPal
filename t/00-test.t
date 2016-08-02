@@ -8,7 +8,7 @@ my $n = 1;
 plan tests => 3;
 
 subtest pretest => sub {
-	plan tests => 11;
+	plan tests => 13;
 
 	my $pp1 = Business::PayPal->new();
 	my $pp2 = Business::PayPal->new(id => 'foobar');
@@ -29,10 +29,17 @@ subtest pretest => sub {
 	like($button1,
 	    qr/name\s*=\s*"{0,1}custom"{0,1}\s+value\s*=\s*"{0,1}$id1"{0,1}/i,
 	   "'custom' param eq id");
-	
+
 	my %query = (
 	    item_name => 'IPN Test',
 	);
+
+	$pp1->check_cert(0);
+	my ($success1, $reason1) = $pp1->ipnvalidate(\%query);
+	is($success1, undef, 'expected failure');
+	is($reason1, 'PayPal says transaction INVALID');
+
+	$pp1->check_cert(1);
 	my ($success, $reason) = $pp1->ipnvalidate(\%query);
 	is($success, undef, 'expected failure');
 	is($reason, 'PayPal says transaction INVALID') or do {
