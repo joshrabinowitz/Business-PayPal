@@ -425,14 +425,14 @@ sub postpaypal {
 		push @certs, $self->{cert};
 	}
 	if ($self->{addcertcontent}) {
-		push @certs, $self->{certcontent};
+		push @cert_cont, $self->{certcontent};
 	}
 
 	if ($self->{cert}) {
 		@certs = $self->{cert};
 	}
 	if ($self->{certcontent}) {
-		@certs = $self->{certcontent};
+		@cert_cont = $self->{certcontent};
 	}
 
 	if ($self->{check_cert}) {
