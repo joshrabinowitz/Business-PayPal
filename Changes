@@ -1,7 +1,8 @@
 Revision history for Perl extension Business::PayPal.
 
-0.19
-    - cleaning up white-spaces.
+0.19 2020.03.07
+    - New certs.
+    - Cleaning up white-spaces.
 
 0.18 2016.08.02
     - New certs.
