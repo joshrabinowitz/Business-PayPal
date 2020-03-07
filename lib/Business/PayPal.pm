@@ -275,7 +275,7 @@ sub new {
 sub check_cert {
 	my ($self, $value) = @_;
 	$self->{check_cert} = $value;
-	return;	
+	return;
 }
 
 # returns current PayPal id
