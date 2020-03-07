@@ -1,5 +1,7 @@
-Business/PayPal version 0.03
+Business/PayPal
 ============================
+
+[![Build Status](https://travis-ci.org/szabgab/Business-PayPal.png)](https://travis-ci.org/szabgab/Business-PayPal)
 
 This module attempts to make the automation of PayPal transactions as simple
 as Credit Card transactions currently are.  This should allow PayPal to be
@@ -20,10 +22,7 @@ To install this module type the following:
 
 DEPENDENCIES
 
-This module requires these other modules and libraries:
-
-Net::SSLeay version 1.14 or greater
-Digest::MD5
+List of dependencies can be found in the [Makefile.PL].
 
 COPYRIGHT AND LICENCE
 
