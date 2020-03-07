@@ -263,7 +263,7 @@ sub new {
     my $self = {
         id => undef,
         address => 'https://www.paypal.com/cgi-bin/webscr',
-		check_cert => 1,
+        check_cert => 1,
         @_,
     };
     bless $self, $class;
@@ -273,9 +273,9 @@ sub new {
 }
 
 sub check_cert {
-	my ($self, $value) = @_;
-	$self->{check_cert} = $value;
-	return;
+    my ($self, $value) = @_;
+    $self->{check_cert} = $value;
+    return;
 }
 
 # returns current PayPal id
@@ -408,39 +408,39 @@ sub postpaypal {
     chomp $ppx509;
     chomp $ppcertcontent;
 
-	my @certs = @certificates;
-	if ($Cert) {
-		# TODO added in 0.12
-		warn "The global variable \$Cert is deprecated and will be removed soon. Pass a certificate to the constructor using the 'cert' parameter.\n";
-		push @certs, $Cert;
-	}
-	my @cert_cont = @cert_contents;
-	if ($Certcontent) {
-		# TODO added in 0.12
-		warn "The global variable \$Certcontent is deprecated and will be removed soon. Pass a certificate to the constructor using the 'certcontent' parameter.\n";
-		push @cert_cont, $Certcontent;
-	}
+    my @certs = @certificates;
+    if ($Cert) {
+        # TODO added in 0.12
+        warn "The global variable \$Cert is deprecated and will be removed soon. Pass a certificate to the constructor using the 'cert' parameter.\n";
+        push @certs, $Cert;
+    }
+    my @cert_cont = @cert_contents;
+    if ($Certcontent) {
+        # TODO added in 0.12
+        warn "The global variable \$Certcontent is deprecated and will be removed soon. Pass a certificate to the constructor using the 'certcontent' parameter.\n";
+        push @cert_cont, $Certcontent;
+    }
 
-	if ($self->{addcert}) {
-		push @certs, $self->{cert};
-	}
-	if ($self->{addcertcontent}) {
-		push @cert_cont, $self->{certcontent};
-	}
+    if ($self->{addcert}) {
+        push @certs, $self->{cert};
+    }
+    if ($self->{addcertcontent}) {
+        push @cert_cont, $self->{certcontent};
+    }
 
-	if ($self->{cert}) {
-		@certs = $self->{cert};
-	}
-	if ($self->{certcontent}) {
-		@cert_cont = $self->{certcontent};
-	}
+    if ($self->{cert}) {
+        @certs = $self->{cert};
+    }
+    if ($self->{certcontent}) {
+        @cert_cont = $self->{certcontent};
+    }
 
-	if ($self->{check_cert}) {
-		return (wantarray ? (undef, "PayPal cert failed to match:\n$ppx509") : undef)
-			unless grep {$_ eq $ppx509} @certs;
-		return (wantarray ? (undef, "PayPal cert contents failed to match:\n$ppcertcontent") : undef)
-		unless grep { $_ eq $ppcertcontent } @cert_cont;
-	}
+    if ($self->{check_cert}) {
+        return (wantarray ? (undef, "PayPal cert failed to match:\n$ppx509") : undef)
+            unless grep {$_ eq $ppx509} @certs;
+        return (wantarray ? (undef, "PayPal cert contents failed to match:\n$ppcertcontent") : undef)
+        unless grep { $_ eq $ppcertcontent } @cert_cont;
+    }
     return (wantarray ? (undef, 'PayPal says transaction INVALID') : undef)
         if $page eq 'INVALID';
     return (wantarray ? (1, 'PayPal says transaction VERIFIED') : 1)
