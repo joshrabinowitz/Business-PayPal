@@ -4,7 +4,7 @@ use 5.6.1;
 use strict;
 use warnings;
 
-our $VERSION = '0.19';
+our $VERSION = '0.20';
 
 use Net::SSLeay 1.14;
 use Digest::MD5 qw(md5_hex);
@@ -840,6 +840,8 @@ the data, and returns success or failure, as well as PayPal's
 response.
 
 =head1 MAINTAINER
+
+Josh Rabinowitz
 
 Gabor Szabo, L<http://szabgab.com/>, L<http://perlmaven.com/>
 

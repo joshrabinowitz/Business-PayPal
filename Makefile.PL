@@ -20,7 +20,7 @@ WriteMakefile(
     (eval { ExtUtils::MakeMaker->VERSION(6.46) }
       ? (META_MERGE => {
           resources => {
-            repository => 'http://github.com/szabgab/Business-PayPal',
+            repository => 'http://github.com/joshrabinowitz/Business-PayPal',
           }
         })
       : ()
